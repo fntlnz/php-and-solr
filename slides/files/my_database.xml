@@ -1,0 +1,32 @@
+<dataConfig>
+    <dataSource name="my_db" driver="com.mysql.jdbc.Driver"
+                url="jdbc:mysql://mydbhost/dbname?zeroDateTimeBehavior=convertToNull"
+                user="root" password="password"/>
+    <document name="customer">
+        <entity name="customer" pk="id"
+                query="SELECT id, name, surname, 'customer' as source FROM customer"
+                deltaImportQuery="SELECT id, name, surname, 'customer' as source
+                    FROM customer WHERE id='${dih.delta.id}'"
+                deltaQuery="SELECT id FROM customer
+                    WHERE last_update > '${dih.last_index_time}'"
+                transformer="TemplateTransformer">
+            <entity name="customer_quote" pk="quote_id"
+                    query="SELECT id as quote_id, email, phone, customer_id
+                        FROM quotes where customer_id = '${customer.id}'"
+                    deltaImportQuery="SELECT id as quote_id, email, phone FROM quotes
+                        WHERE id = ${dih.delta.quote_id}"
+                    deltaQuery="SELECT id as quote_id, customer_id
+                        FROM quotes where insert_date > '${dih.last_index_time}'"
+                    parentDeltaQuery="select id from customer
+                        where id=${customer_quote.customer_id}"/>
+            <field column="id" name="id"/>
+            <field column="uuid" name="uuid"
+                   template="${customer.source}-${customer.id}"/>
+            <field column="source" name="source"/>
+            <field column="name" name="name"/>
+            <field column="surname" name="surname"/>
+            <field column="email" name="email"/>
+            <field column="phone" name="phone"/>
+        </entity>
+    </document>
+</dataConfig>
