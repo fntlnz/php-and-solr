@@ -20,11 +20,6 @@ output: ../php-and-solr.html
 - [twitter.com/fontanalorenz](http://twitter.com/fontanalorenz)
 
 --
-### What's included
-- The slides, in the **slides** folder
-- The Vagrant machine in the **vagrant** folder (we will **up** it during this talk)
-- The slides are generated from markdown using [cleaver](https://github.com/jdan/cleaver)
---
 ###What is Solr?
 - Solr is a standalone **enterprise search server** with a REST-like API. You put documents in it (called "indexing") via XML, JSON, CSV or binary over HTTP. You query it via HTTP GET and receive XML, JSON, CSV or binary results.
 - Solr is based on **Apache Lucene** and it comes from the **Apache Software Foundation**.
@@ -393,6 +388,8 @@ If you configured also another endpoint
     $client = $this->get('solarium.client.newEndpointName');
 --
 ![PHP and Solr](img/thats-all-folks.png)
+--
+# Questions?
 --
 ###Sitography
 - [http://en.wikipedia.org/wiki/Apache_Solr](http://en.wikipedia.org/wiki/Apache_Solr)
