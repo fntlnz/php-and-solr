@@ -197,9 +197,9 @@ In composer.json add
       }
     }
 
-And then run
+And then
 
-    composer install
+    composer update
 --
 ### Solarium: Solr endpoint config
     $config = array(
@@ -283,12 +283,23 @@ In composer.json add
       }
     }
 
-and then run
+and then
 
-    composer install
+    composer update
+
+--
+###ZF2 Integration: Enable the module
+
+In your **application.config.php** add the module
+
+    'modules' => array(
+        //...
+        'SolariumModule'
+    ),
 
 --
 ###ZF2 Integration: Configuration
+
 Configure your Solr endpoint
 
     array(
@@ -314,7 +325,7 @@ Configure your Solr endpoint
     $resultset = $client->execute($query);
 --
 ###ZF2 Integration: Paginate results
-This example shows how to use the built-in Zend\Paginator adapter
+This example shows how to use the built-in **Zend\Paginator adapter**
 
     use \EwgoSolarium\Paginator\Adapter\SolariumPaginator;
 
@@ -324,6 +335,64 @@ This example shows how to use the built-in Zend\Paginator adapter
     $paginator->setCurrentPageNumber($page);
     $paginator->setItemCountPerPage($countPerPage);
 
+--
+###Symfony 2 Integration
+On the other hand, for Symfony 2 there's a bundle from Nelmio named **NelmioSolariumBundle**.
+
+The **NelmioSolariumBundle** can be found here [https://github.com/nelmio/NelmioSolariumBundle](https://github.com/nelmio/NelmioSolariumBundle)
+--
+###Symfony 2 Integration: Installation
+In composer.json add
+
+    {
+        "require": {
+            "nelmio/solarium-bundle": "2.*"
+        }
+    }
+
+and then
+
+    composer update
+
+--
+###Symfony 2 Integration: Enable the bundle
+
+    $bundles = array(
+        ...
+        new Nelmio\SolariumBundle\NelmioSolariumBundle(),
+        ...
+    );
+--
+###Symfony 2 Integration: Configuration
+Configure your Solr endpoint
+
+    nelmio_solarium:
+        endpoints:
+            default:
+                host: yourhost
+                port: 8983
+                path: /solr
+                core: default
+                timeout: 5
+        clients:
+            default:
+                endpoints: [default]
+
+--
+###Symfony 2 Integration: Usage
+    $client = $this->get('solarium.client');
+
+    // From here on, it's all the same as solarium
+    $select = $client->createSelect();
+    $select->setQuery('foo');
+    $results = $client->select($select);
+
+
+If you configured also another endpoint
+
+    $client = $this->get('solarium.client.newEndpointName');
+--
+![PHP and Solr](img/thats-all-folks.png)
 --
 ###Sitography
 - [http://en.wikipedia.org/wiki/Apache_Solr](http://en.wikipedia.org/wiki/Apache_Solr)

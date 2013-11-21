@@ -535,8 +535,8 @@ The features that I appreciate more than others are</p>
       "<span class="attribute">solarium/solarium</span>": <span class="value"><span class="string">"3.1.*"</span>
   }</span>
 }</span></code></pre>
-<p>And then run</p>
-<pre><code><span class="title">composer</span> install</code></pre>
+<p>And then</p>
+<pre><code>composer <span class="operator"><span class="keyword">update</span></code></pre>
 </section>
     <section class="slide"><h3 id="solarium-solr-endpoint-config">Solarium: Solr endpoint config</h3>
 <pre><code>$config = <span class="keyword">array</span>(
@@ -613,8 +613,15 @@ you to connect Solr and your ZF2 application without headache.</p>
       "<span class="attribute">ewgo/solarium-module</span>": <span class="value"><span class="string">"1.0.2"</span>
   }</span>
 }</span></code></pre>
-<p>and then run</p>
-<pre><code><span class="title">composer</span> install</code></pre>
+<p>and then</p>
+<pre><code>composer <span class="operator"><span class="keyword">update</span></code></pre>
+</section>
+    <section class="slide"><h3 id="zf2-integration-enable-the-module">ZF2 Integration: Enable the module</h3>
+<p>In your <strong>application.config.php</strong> add the module</p>
+<pre><code><span class="string">'modules'</span> =&gt; array(
+    //<span class="keyword">...</span>
+    <span class="string">'SolariumModule'</span>
+),</code></pre>
 </section>
     <section class="slide"><h3 id="zf2-integration-configuration">ZF2 Integration: Configuration</h3>
 <p>Configure your Solr endpoint</p>
@@ -622,7 +629,7 @@ you to connect Solr and your ZF2 application without headache.</p>
     <span class="attribute">'solarium</span>' =&gt; <span class="keyword">array</span>(
         <span class="attribute">'endpoint</span>' =&gt; <span class="keyword">array</span>(
             <span class="attribute">'default</span>' =&gt; <span class="keyword">array</span>(
-                <span class="attribute">'host</span>' =&gt; <span class="attribute">'localhost</span>',
+                <span class="attribute">'host</span>' =&gt; <span class="attribute">'yourhost</span>',
                 <span class="attribute">'port</span>' =&gt; <span class="number">8983</span>,
                 <span class="attribute">'path</span>' =&gt; '/solr',
                 <span class="attribute">'core</span>' =&gt; <span class="attribute">'default</span>',
@@ -640,7 +647,7 @@ you to connect Solr and your ZF2 application without headache.</p>
 <span class="variable">$resultset</span> = <span class="variable">$client</span>-&gt;execute(<span class="variable">$query</span>);</code></pre>
 </section>
     <section class="slide"><h3 id="zf2-integration-paginate-results">ZF2 Integration: Paginate results</h3>
-<p>This example shows how to use the built-in Zend\Paginator adapter</p>
+<p>This example shows how to use the built-in <strong>Zend\Paginator adapter</strong></p>
 <pre><code><span class="keyword">use</span> \EwgoSolarium\Paginator\Adapter\SolariumPaginator;
 
 <span class="variable">$paginator</span> = new \Zend\Paginator\Paginator(
@@ -648,6 +655,53 @@ you to connect Solr and your ZF2 application without headache.</p>
 );
 <span class="variable">$paginator</span>-&gt;setCurrentPageNumber(<span class="variable">$page</span>);
 <span class="variable">$paginator</span>-&gt;setItemCountPerPage(<span class="variable">$countPerPage</span>);</code></pre>
+</section>
+    <section class="slide"><h3 id="symfony-2-integration">Symfony 2 Integration</h3>
+<p>On the other hand, for Symfony 2 there&#39;s a bundle from Nelmio named <strong>NelmioSolariumBundle</strong>.</p>
+<p>The <strong>NelmioSolariumBundle</strong> can be found here <a href="https://github.com/nelmio/NelmioSolariumBundle"><a href="https://github.com/nelmio/NelmioSolariumBundle">https://github.com/nelmio/NelmioSolariumBundle</a></a></p>
+</section>
+    <section class="slide"><h3 id="symfony-2-integration-installation">Symfony 2 Integration: Installation</h3>
+<p>In composer.json add</p>
+<pre><code>{
+    "<span class="attribute">require</span>": <span class="value">{
+        "<span class="attribute">nelmio/solarium-bundle</span>": <span class="value"><span class="string">"2.*"</span>
+    }</span>
+}</span></code></pre>
+<p>and then</p>
+<pre><code>composer <span class="operator"><span class="keyword">update</span></code></pre>
+</section>
+    <section class="slide"><h3 id="symfony-2-integration-enable-the-bundle">Symfony 2 Integration: Enable the bundle</h3>
+<pre><code>$bundles = array(
+    <span class="keyword">...</span>
+    new Nelmio\SolariumBundle\NelmioSolariumBundle(),
+    <span class="keyword">...</span>
+);</code></pre>
+</section>
+    <section class="slide"><h3 id="symfony-2-integration-configuration">Symfony 2 Integration: Configuration</h3>
+<p>Configure your Solr endpoint</p>
+<pre><code><span class="method">nelmio_solarium:</span>
+    <span class="method">endpoints:</span>
+        <span class="method">default:</span>
+            <span class="method">host:</span> yourhost
+            <span class="method">port:</span> <span class="number">8983</span>
+            <span class="method">path:</span> /solr
+            <span class="method">core:</span> default
+            <span class="method">timeout:</span> <span class="number">5</span>
+    <span class="method">clients:</span>
+        <span class="method">default:</span>
+            <span class="method">endpoints:</span> [default]</code></pre>
+</section>
+    <section class="slide"><h3 id="symfony-2-integration-usage">Symfony 2 Integration: Usage</h3>
+<pre><code><span class="variable">$client</span> = <span class="variable">$this</span>-&gt;get(<span class="string">'solarium.client'</span>);
+
+<span class="comment">// From here on, it's all the same as solarium</span>
+<span class="variable">$select</span> = <span class="variable">$client</span>-&gt;createSelect();
+<span class="variable">$select</span>-&gt;setQuery(<span class="string">'foo'</span>);
+<span class="variable">$results</span> = <span class="variable">$client</span>-&gt;<span class="keyword">select</span>(<span class="variable">$select</span>);</code></pre>
+<p>If you configured also another endpoint</p>
+<pre><code><span class="variable">$client</span> = <span class="variable">$this</span>-&gt;get(<span class="string">'solarium.client.newEndpointName'</span>);</code></pre>
+</section>
+    <section class="slide"><p><img src="img/thats-all-folks.png" alt="PHP and Solr"></p>
 </section>
     <section class="slide"><h3 id="sitography">Sitography</h3>
 <ul>
