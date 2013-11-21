@@ -19,18 +19,6 @@
   margin: 80px auto 0 auto;
 }
 
-/* styles for print layout */
-#wrapper.nohide {
-  overflow: auto;
-  height: auto;
-  box-shadow: none;
-}
-
-#wrapper.nohide .slide {
-  margin-bottom: 30px;
-}
-/* /styles */
-
 .slide {
   width: auto;
   height: 540px;
@@ -145,14 +133,6 @@ pre {
   line-height: 1.3;
 }
 
-code {
-  background-color: #e7e7e7;
-}
-
-pre > code {
-  background-color: inherit;
-}
-
 .progress {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -221,13 +201,72 @@ pre > code {
   }
 }
 
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    size: letter;
+  }
+
+  html {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  body {
+    margin: 0 auto !important;
+    border: 0;
+    padding: 0;
+    float: none !important;
+    overflow: visible;
+    background: none !important;
+    font-size: 52%;
+  }
+
+  .progress, .controls {
+    display: none;
+  }
+
+  #wrapper {
+    overflow: visible;
+    height: 100%;
+    margin-top: 0;
+  }
+
+  .slide {
+    border: 1px solid #222;
+    margin-bottom: 40px;
+    height: 3.5in;
+  }
+
+  .slide:nth-child(odd) {
+    /* 2 slides per page */
+    page-break-before: always;
+  }
+}
+
 /*
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 */
 
-pre code {
-  display: block; padding: 0.5em;
-  color: #333;
+code, pre {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  overflow: auto;
+  padding: 6px 10px;
+}
+
+code {
+  padding: 0 5px;
+}
+
+pre>code {
+  margin: 0; padding: 0;
+  border: none;
+  background: transparent;
 }
 
 pre .comment,
@@ -451,24 +490,22 @@ use a bundled Jetty servlet container.</p>
     <section class="slide"><h3 id="create-a-new-core">Create a new Core</h3>
 <p><pre>cd downloaded-solr/example/solr</pre>
 This is how the directory should look like</p>
-<pre><code><span class="literal">-</span><span class="comment">rw</span>-<span class="comment">r</span>-<span class="literal">-</span><span class="comment">r</span>-<span class="literal">-</span><span class="comment">@</span> <span class="comment">1</span> <span class="comment">fontanalorenzo</span>  <span class="comment">staff</span>   <span class="comment">2</span>.<span class="comment">4K</span> <span class="comment">12</span> <span class="comment">Sep</span> <span class="comment">18:10</span> <span class="comment">README</span>.<span class="comment">txt</span>
-<span class="comment">drwxr</span>-<span class="comment">xr</span>-<span class="comment">x@</span> <span class="comment">2</span> <span class="comment">fontanalorenzo</span>  <span class="comment">staff</span>    <span class="comment">68B</span> <span class="comment">12</span> <span class="comment">Sep</span> <span class="comment">18:10</span> <span class="comment">bin</span>
-<span class="comment">drwxr</span>-<span class="comment">xr</span>-<span class="comment">x@</span> <span class="comment">5</span> <span class="comment">fontanalorenzo</span>  <span class="comment">staff</span>   <span class="comment">170B</span> <span class="comment">12</span> <span class="comment">Sep</span> <span class="comment">18:10</span> <span class="comment">collection1</span>
-<span class="literal">-</span><span class="comment">rw</span>-<span class="comment">r</span>-<span class="literal">-</span><span class="comment">r</span>-<span class="literal">-</span><span class="comment">@</span> <span class="comment">1</span> <span class="comment">fontanalorenzo</span>  <span class="comment">staff</span>   <span class="comment">1</span>.<span class="comment">7K</span> <span class="comment">12</span> <span class="comment">Sep</span> <span class="comment">18:10</span> <span class="comment">solr</span>.<span class="comment">xml</span>
-<span class="literal">-</span><span class="comment">rw</span>-<span class="comment">r</span>-<span class="literal">-</span><span class="comment">r</span>-<span class="literal">-</span><span class="comment">@</span> <span class="comment">1</span> <span class="comment">fontanalorenzo</span>  <span class="comment">staff</span>   <span class="comment">501B</span> <span class="comment">12</span> <span class="comment">Sep</span> <span class="comment">18:10</span> <span class="comment">zoo</span>.<span class="comment">cfg</code></pre>
+<pre><code>-rw-r--r--@ 1 fontanalorenzo  staff   2.4K 12 Sep 18:10 README.txt
+drwxr-xr-x@ 2 fontanalorenzo  staff    68B 12 Sep 18:10 bin
+drwxr-xr-x@ 5 fontanalorenzo  staff   170B 12 Sep 18:10 collection1
+-rw-r--r--@ 1 fontanalorenzo  staff   1.7K 12 Sep 18:10 solr.xml
+-rw-r--r--@ 1 fontanalorenzo  staff   501B 12 Sep 18:10 zoo.cfg</code></pre>
 <p>copy the default core to make your own</p>
-<pre><code><span class="title">cp</span> collection1 my-core
-<span class="title">cd</span> my-core</code></pre>
+<pre><code>cp collection1 my-core
+cd my-core</code></pre>
 </section>
     <section class="slide"><h3 id="core-properties">core.properties</h3>
 <p>Edit the core.properties file changing the core name and telling
 Solr to spend all the time necessary to fully load the cores on startup.
 A list of possible cases can be found <a href="http://wiki.apache.org/solr/LotsOfCores">here.</a></p>
-<pre><code><span class="title">vim</span> core.properties
-
-<span class="title">name</span>=my-core
-<span class="title">loadOnStartup</span>=true
-<span class="title">transient</span>=false</code></pre>
+<pre><code>name=my-core
+loadOnStartup=true
+transient=false</code></pre>
 </section>
     <section class="slide"><h3 id="the-conf-folder">The Conf folder</h3>
 <p>As the name suggest, the conf folder contains the configuration files.
@@ -488,12 +525,12 @@ and how those fields should be dealt with when adding documents to the index, or
     <section class="slide"><h3 id="solrconfig-xml-example-files-solrconfig-xml-">solrconfig.xml <a href="files/solrconfig.xml">example</a></h3>
 <p><strong>solrconfig.xml</strong> is the file that contains most of the parameters for configuring Solr itself.
 One of the most important configuration in this file is the <strong>DIH</strong> (data import handler)  configuration</p>
-<pre><code><span class="tag">&lt;<span class="title">requestHandler</span> <span class="attribute">name</span>=<span class="value">"/dataimport"</span>
-                <span class="attribute">class</span>=<span class="value">"solr.handler.dataimport.DataImportHandler"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">lst</span> <span class="attribute">name</span>=<span class="value">"defaults"</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">str</span> <span class="attribute">name</span>=<span class="value">"config"</span>&gt;</span>my_database.xml<span class="tag">&lt;/<span class="title">str</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">lst</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">requestHandler</span>&gt;</span></code></pre>
+<pre><code>&lt;requestHandler name=&quot;/dataimport&quot;
+                class=&quot;solr.handler.dataimport.DataImportHandler&quot;&gt;
+    &lt;lst name=&quot;defaults&quot;&gt;
+        &lt;str name=&quot;config&quot;&gt;my_database.xml&lt;/str&gt;
+    &lt;/lst&gt;
+&lt;/requestHandler&gt;</code></pre>
 </section>
     <section class="slide"><h3 id="my_database-xml-example-files-my_database-xml-">my_database.xml <a href="files/my_database.xml">example</a></h3>
 <p><strong>my_database.xml</strong> is the config file we previously declared in the <strong>solrconfig.xml</strong>,
@@ -524,70 +561,70 @@ The features that I appreciate more than others are</p>
     <section class="slide"><h3 id="solarium-installation">Solarium: Installation</h3>
 <p>In composer.json add</p>
 <pre><code>{
-  "<span class="attribute">require</span>": <span class="value">{
-      "<span class="attribute">solarium/solarium</span>": <span class="value"><span class="string">"3.1.*"</span>
-  }</span>
-}</span></code></pre>
+  &quot;require&quot;: {
+      &quot;solarium/solarium&quot;: &quot;3.1.*&quot;
+  }
+}</code></pre>
 <p>And then</p>
-<pre><code>composer <span class="operator"><span class="keyword">update</span></code></pre>
+<pre><code>composer update</code></pre>
 </section>
     <section class="slide"><h3 id="solarium-solr-endpoint-config">Solarium: Solr endpoint config</h3>
-<pre><code>$config = <span class="keyword">array</span>(
-    <span class="attribute">'endpoint</span>' =&gt; <span class="keyword">array</span>(
-        <span class="attribute">'localhost</span>' =&gt; <span class="keyword">array</span>(
-            <span class="attribute">'host</span>' =&gt; <span class="attribute">'yourhost</span>,
-            <span class="attribute">'port</span>' =&gt; <span class="number">8983</span>,
-            <span class="attribute">'path</span>' =&gt; '/solr/',
+<pre><code>$config = array(
+    &#39;endpoint&#39; =&gt; array(
+        &#39;localhost&#39; =&gt; array(
+            &#39;host&#39; =&gt; &#39;yourhost,
+            &#39;port&#39; =&gt; 8983,
+            &#39;path&#39; =&gt; &#39;/solr/&#39;,
         )
     )
 );</code></pre>
 </section>
     <section class="slide"><h3 id="solarium-a-select-query-example">Solarium: A select query example</h3>
-<pre><code>/* create a client instance <span class="variable">*/</span>
-<span class="variable">$client</span> = new Solarium_Client(<span class="variable">$config</span>);
+<pre><code>/* create a client instance */
+$client = new Solarium_Client($config);
 
-<span class="regexp">/* get a select query instance */</span>
-<span class="variable">$query</span> = <span class="variable">$client</span>-&gt;createSelect();
+/* get a select query instance */
+$query = $client-&gt;createSelect();
 
-<span class="regexp">/* Set a query (all documents where name is renzo and email contains @gmail.com) */</span>
-<span class="variable">$query</span>-&gt;setQuery(<span class="string">'name:renzo AND email:@gmail.com'</span>);
+/* Set a query (all documents where name is renzo and email contains @gmail.com) */
+$query-&gt;setQuery(&#39;name:renzo AND email:@gmail.com&#39;);
 
-<span class="regexp">/* set start and rows param (comparable to SQL limit) using fluent interface */</span>
-<span class="variable">$query</span>-&gt;setStart(<span class="number">1</span>)-&gt;setRows(<span class="number">20</span>);
+/* set start and rows param (comparable to SQL limit) using fluent interface */
+$query-&gt;setStart(1)-&gt;setRows(20);
 
-<span class="regexp">/* set fields to fetch (this overrides the default setting 'all fields') */</span>
-<span class="variable">$query</span>-&gt;setFields(array(<span class="string">'id'</span>,<span class="string">'name'</span>,<span class="string">'surname'</span>, <span class="string">'email'</span>));
+/* set fields to fetch (this overrides the default setting &#39;all fields&#39;) */
+$query-&gt;setFields(array(&#39;id&#39;,&#39;name&#39;,&#39;surname&#39;, &#39;email&#39;));
 
-<span class="regexp">/* sort the results by id DESC */</span>
-<span class="variable">$query</span>-&gt;addSort(<span class="string">'id'</span>, Solarium_Query_Select::SORT_DESC);
+/* sort the results by id DESC */
+$query-&gt;addSort(&#39;id&#39;, Solarium_Query_Select::SORT_DESC);
 
-<span class="regexp">/* this executes the query and returns the result */</span>
-<span class="variable">$resultset</span> = <span class="variable">$client</span>-&gt;select(<span class="variable">$query</span>);
+/* this executes the query and returns the result */
+$resultset = $client-&gt;select($query);
 
-<span class="regexp">/* total number of results found */</span>
-<span class="variable">$numFound</span> = <span class="variable">$resultset</span>-&gt;getNumFound();</code></pre>
+/* total number of results found */
+$numFound = $resultset-&gt;getNumFound();</code></pre>
 </section>
     <section class="slide"><h3 id="solarium-an-example-with-facets">Solarium: An example with facets</h3>
-<pre><code><span class="comment">// create a client instance</span>
-<span class="variable">$client</span> = <span class="keyword">new</span> Solarium\Client(<span class="variable">$config</span>);
+<pre><code>// create a client instance
+$client = new Solarium\Client($config);
 
-<span class="comment">// get a select query instance</span>
-<span class="variable">$query</span> = <span class="variable">$client</span>-&gt;createSelect();
+// get a select query instance
+$query = $client-&gt;createSelect();
 
-<span class="comment">// get the facetset component</span>
-<span class="variable">$facetSet</span> = <span class="variable">$query</span>-&gt;getFacetSet();
+// get the facetset component
+$facetSet = $query-&gt;getFacetSet();
 
-<span class="comment">// create a facet field instance and set options</span>
-<span class="variable">$facetSet</span>-&gt;createFacetField(<span class="string">'type'</span>)-&gt;setField(<span class="string">'type'</span>);
+// create a facet field instance and set options
+$facetSet-&gt;createFacetField(&#39;type&#39;)-&gt;setField(&#39;type&#39;);
 
-<span class="comment">// this executes the query and returns the result</span>
-<span class="variable">$resultset</span> = <span class="variable">$client</span>-&gt;select(<span class="variable">$query</span>);
+// this executes the query and returns the result
+$resultset = $client-&gt;select($query);
 
-<span class="comment">// display facet counts</span>
-<span class="keyword">echo</span> <span class="string">'&lt;hr/&gt;Facet counts for field "type":&lt;br/&gt;'</span>;
-<span class="variable">$facet</span> = <span class="variable">$resultset</span>-&gt;getFacetSet()-&gt;getFacet(<span class="string">'stock'</span>);
-<span class="keyword">foreach</span>(<span class="variable">$facet</span> <span class="keyword">as</span> <span class="variable">$value</span> =&gt; <span class="variable">$count</span>) {
-    <span class="keyword">echo</span> <span class="string">"{$value} [{$count}]&lt;br/&gt;"</span>; <span class="comment">// ex output: type name [100]</span>
+// display facet counts
+echo &#39;&lt;hr/&gt;Facet counts for field &quot;type&quot;:&lt;br/&gt;&#39;;
+$facet = $resultset-&gt;getFacetSet()-&gt;getFacet(&#39;stock&#39;);
+foreach($facet as $value =&gt; $count) {
+    echo &quot;{$value} [{$count}]&lt;br/&gt;&quot;; // ex output: type name [100]
 }</code></pre>
 </section>
     <section class="slide"><h1 id="framework-integration">Framework integration</h1>
@@ -602,52 +639,53 @@ you to connect Solr and your ZF2 application without headache.</p>
     <section class="slide"><h3 id="zf2-integration-installation">ZF2 Integration: Installation</h3>
 <p>In composer.json add</p>
 <pre><code>{
-  "<span class="attribute">require</span>": <span class="value">{
-      "<span class="attribute">ewgo/solarium-module</span>": <span class="value"><span class="string">"1.0.2"</span>
-  }</span>
-}</span></code></pre>
+  &quot;require&quot;: {
+      &quot;ewgo/solarium-module&quot;: &quot;1.0.2&quot;
+  }
+}</code></pre>
 <p>and then</p>
-<pre><code>composer <span class="operator"><span class="keyword">update</span></code></pre>
+<pre><code>composer update</code></pre>
 </section>
     <section class="slide"><h3 id="zf2-integration-enable-the-module">ZF2 Integration: Enable the module</h3>
 <p>In your <strong>application.config.php</strong> add the module</p>
-<pre><code><span class="string">'modules'</span> =&gt; array(
-    //<span class="keyword">...</span>
-    <span class="string">'SolariumModule'</span>
+<pre><code>&#39;modules&#39; =&gt; array(
+    //...
+    &#39;SolariumModule&#39;
 ),</code></pre>
 </section>
     <section class="slide"><h3 id="zf2-integration-configuration">ZF2 Integration: Configuration</h3>
 <p>Configure your Solr endpoint</p>
-<pre><code><span class="keyword">array</span>(
-    <span class="attribute">'solarium</span>' =&gt; <span class="keyword">array</span>(
-        <span class="attribute">'endpoint</span>' =&gt; <span class="keyword">array</span>(
-            <span class="attribute">'default</span>' =&gt; <span class="keyword">array</span>(
-                <span class="attribute">'host</span>' =&gt; <span class="attribute">'yourhost</span>',
-                <span class="attribute">'port</span>' =&gt; <span class="number">8983</span>,
-                <span class="attribute">'path</span>' =&gt; '/solr',
-                <span class="attribute">'core</span>' =&gt; <span class="attribute">'default</span>',
-                <span class="attribute">'timeout</span>' =&gt; <span class="number">5</span>
+<pre><code>array(
+    &#39;solarium&#39; =&gt; array(
+        &#39;endpoint&#39; =&gt; array(
+            &#39;default&#39; =&gt; array(
+                &#39;host&#39; =&gt; &#39;yourhost&#39;,
+                &#39;port&#39; =&gt; 8983,
+                &#39;path&#39; =&gt; &#39;/solr&#39;,
+                &#39;core&#39; =&gt; &#39;default&#39;,
+                &#39;timeout&#39; =&gt; 5
             )
         )
     )
 )</code></pre>
 </section>
     <section class="slide"><h3 id="zf2-integration-usage">ZF2 Integration: Usage</h3>
-<pre><code><span class="variable">$client</span> = <span class="variable">$serviceLocator</span>-&gt;get(<span class="string">'solarium'</span>);
+<p>Solarium is now available in the service locator via the <strong>solarium</strong> alias</p>
+<pre><code>$client = $serviceLocator-&gt;get(&#39;solarium&#39;);
 
-<span class="comment">// From here on, it's all the same as solarium</span>
-<span class="variable">$query</span> = <span class="variable">$client</span>-&gt;createSelect();
-<span class="variable">$resultset</span> = <span class="variable">$client</span>-&gt;execute(<span class="variable">$query</span>);</code></pre>
+// From here on, it&#39;s all the same as solarium
+$query = $client-&gt;createSelect();
+$resultset = $client-&gt;execute($query);</code></pre>
 </section>
     <section class="slide"><h3 id="zf2-integration-paginate-results">ZF2 Integration: Paginate results</h3>
 <p>This example shows how to use the built-in <strong>Zend\Paginator adapter</strong></p>
-<pre><code><span class="keyword">use</span> \EwgoSolarium\Paginator\Adapter\SolariumPaginator;
+<pre><code>use \EwgoSolarium\Paginator\Adapter\SolariumPaginator;
 
-<span class="variable">$paginator</span> = new \Zend\Paginator\Paginator(
-    new SolariumPaginator(<span class="variable">$client</span>, <span class="variable">$query</span>)
+$paginator = new \Zend\Paginator\Paginator(
+    new SolariumPaginator($client, $query)
 );
-<span class="variable">$paginator</span>-&gt;setCurrentPageNumber(<span class="variable">$page</span>);
-<span class="variable">$paginator</span>-&gt;setItemCountPerPage(<span class="variable">$countPerPage</span>);</code></pre>
+$paginator-&gt;setCurrentPageNumber($page);
+$paginator-&gt;setItemCountPerPage($countPerPage);</code></pre>
 </section>
     <section class="slide"><h3 id="symfony-2-integration">Symfony 2 Integration</h3>
 <p>On the other hand, for Symfony 2 there&#39;s a bundle from Nelmio named <strong>NelmioSolariumBundle</strong>.</p>
@@ -656,43 +694,45 @@ you to connect Solr and your ZF2 application without headache.</p>
     <section class="slide"><h3 id="symfony-2-integration-installation">Symfony 2 Integration: Installation</h3>
 <p>In composer.json add</p>
 <pre><code>{
-    "<span class="attribute">require</span>": <span class="value">{
-        "<span class="attribute">nelmio/solarium-bundle</span>": <span class="value"><span class="string">"2.*"</span>
-    }</span>
-}</span></code></pre>
+    &quot;require&quot;: {
+        &quot;nelmio/solarium-bundle&quot;: &quot;2.*&quot;
+    }
+}</code></pre>
 <p>and then</p>
-<pre><code>composer <span class="operator"><span class="keyword">update</span></code></pre>
+<pre><code>composer update</code></pre>
 </section>
     <section class="slide"><h3 id="symfony-2-integration-enable-the-bundle">Symfony 2 Integration: Enable the bundle</h3>
+<p>Add the bundle to the AppKernel.php</p>
 <pre><code>$bundles = array(
-    <span class="keyword">...</span>
+    ...
     new Nelmio\SolariumBundle\NelmioSolariumBundle(),
-    <span class="keyword">...</span>
+    ...
 );</code></pre>
 </section>
     <section class="slide"><h3 id="symfony-2-integration-configuration">Symfony 2 Integration: Configuration</h3>
 <p>Configure your Solr endpoint</p>
-<pre><code><span class="method">nelmio_solarium:</span>
-    <span class="method">endpoints:</span>
-        <span class="method">default:</span>
-            <span class="method">host:</span> yourhost
-            <span class="method">port:</span> <span class="number">8983</span>
-            <span class="method">path:</span> /solr
-            <span class="method">core:</span> default
-            <span class="method">timeout:</span> <span class="number">5</span>
-    <span class="method">clients:</span>
-        <span class="method">default:</span>
-            <span class="method">endpoints:</span> [default]</code></pre>
+<pre><code>nelmio_solarium:
+    endpoints:
+        default:
+            host: yourhost
+            port: 8983
+            path: /solr
+            core: default
+            timeout: 5
+    clients:
+        default:
+            endpoints: [default]</code></pre>
 </section>
     <section class="slide"><h3 id="symfony-2-integration-usage">Symfony 2 Integration: Usage</h3>
-<pre><code><span class="variable">$client</span> = <span class="variable">$this</span>-&gt;get(<span class="string">'solarium.client'</span>);
+<p>Solarium is accessible via the <strong>solarium.client</strong> alias.</p>
+<pre><code>$client = $this-&gt;get(&#39;solarium.client&#39;);
 
-<span class="comment">// From here on, it's all the same as solarium</span>
-<span class="variable">$select</span> = <span class="variable">$client</span>-&gt;createSelect();
-<span class="variable">$select</span>-&gt;setQuery(<span class="string">'foo'</span>);
-<span class="variable">$results</span> = <span class="variable">$client</span>-&gt;<span class="keyword">select</span>(<span class="variable">$select</span>);</code></pre>
-<p>If you configured also another endpoint</p>
-<pre><code><span class="variable">$client</span> = <span class="variable">$this</span>-&gt;get(<span class="string">'solarium.client.newEndpointName'</span>);</code></pre>
+// From here on, it&#39;s all the same as solarium
+$select = $client-&gt;createSelect();
+$select-&gt;setQuery(&#39;foo&#39;);
+$results = $client-&gt;select($select);</code></pre>
+<p>If you configured also another endpoint you will have aliases like this one</p>
+<pre><code>$client = $this-&gt;get(&#39;solarium.client.newEndpointName&#39;);</code></pre>
 </section>
     <section class="slide"><p><img src="slides/img/thats-all-folks.png" alt="PHP and Solr"></p>
 </section>
@@ -709,10 +749,10 @@ you to connect Solr and your ZF2 application without headache.</p>
     <section class="slide"><div class="author">
   <h1 class="name">Lorenzo Fontana</h1>
     <h3 class="twitter">
-      <a href="http://twitter.com/@fontanalorenz" tabindex="-1">@fontanalorenz</a>
+      <a href="http://twitter.com/@fontanalorenz">@fontanalorenz</a>
     </h3>
     <h3 class="email">
-      <a href="mailto:fontanalorenzo@me.com" tabindex="-1">fontanalorenzo@me.com</a>
+      <a href="mailto:fontanalorenzo@me.com">fontanalorenzo@me.com</a>
     </h3>
 </div>
 </section>
@@ -722,8 +762,9 @@ you to connect Solr and your ZF2 application without headache.</p>
     <div class="arrow next"></div>
   </div>
 
-<script type="text/javascript">
-  /**
+
+  <script type="text/javascript">
+    /**
  * Takes the last slide and places it at the front.
  */
 function goBack() {
@@ -738,6 +779,7 @@ function goBack() {
 
   setCurrentProgress();
   updateURL();
+  updateTabIndex();
 }
 
 /**
@@ -755,6 +797,7 @@ function goForward() {
 
   setCurrentProgress();
   updateURL();
+  updateTabIndex();
 }
 
 /**
@@ -824,10 +867,32 @@ function goToPage(page) {
   }
 }
 
+/**
+ * Removes tabindex property from all links on the current slide, sets
+ * tabindex = -1 for all links on other slides. Prevents slides from appearing
+ * out of control.
+ */
+function updateTabIndex() {
+  var allLinks = document.querySelectorAll('.slide a');
+  var currentPageLinks = document.querySelector('.slide').querySelectorAll('a');
+  var i;
+
+  for (i = 0; i < allLinks.length; i++) {
+    allLinks[i].setAttribute('tabindex', -1);
+  }
+
+  for (i = 0; i < currentPageLinks.length; i++) {
+    allLinks[i].removeAttribute('tabindex');
+  }
+}
+
 window.onload = function () {
 
   // Give each slide a "page" data attribute.
   setPageNumbers();
+
+  // Update the tabindex to prevent weird slide transitioning
+  updateTabIndex();
 
   // If the location hash specifies a page number, go to it.
   var page = window.location.hash.slice(1);
@@ -836,11 +901,11 @@ window.onload = function () {
   document.onkeydown = function (e) {
     var kc = e.keyCode;
 
-    // left, down, H, J, backspace - BACK
-    // up, right, K, L, space, enter - FORWARD
-    if (kc == 37 || kc == 40 || kc == 8 || kc == 72 || kc == 74) {
+    // left, down, H, J, backspace, PgUp - BACK
+    // up, right, K, L, space, enter, PgDn - FORWARD
+    if (kc == 37 || kc == 40 || kc == 8 || kc == 72 || kc == 74 || kc == 33) {
       goBack();
-    } else if (kc == 38 || kc == 39 || kc == 13 || kc == 32 || kc == 75 || kc == 76) {
+    } else if (kc == 38 || kc == 39 || kc == 13 || kc == 32 || kc == 75 || kc == 76 || kc == 34) {
       goForward();
     }
   }
@@ -859,7 +924,7 @@ window.onload = function () {
 
 }
 
-</script>
 
+  </script>
 </body>
 </html>

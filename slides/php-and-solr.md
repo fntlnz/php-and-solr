@@ -3,7 +3,7 @@ author:
   name: Lorenzo Fontana
   twitter: fontanalorenz
   email: fontanalorenzo@me.com
-output: ../../index.html
+output: ../index.html
 
 --
 <p align="center" style="padding-top:100px">![PHP and Solr](slides/img/phpandsolr.png)</p>
@@ -122,8 +122,6 @@ copy the default core to make your own
 Edit the core.properties file changing the core name and telling
 Solr to spend all the time necessary to fully load the cores on startup.
 A list of possible cases can be found [here.](http://wiki.apache.org/solr/LotsOfCores)
-
-    vim core.properties
 
     name=my-core
     loadOnStartup=true
@@ -311,6 +309,8 @@ Configure your Solr endpoint
 
 --
 ###ZF2 Integration: Usage
+Solarium is now available in the service locator via the **solarium** alias
+
     $client = $serviceLocator->get('solarium');
 
     // From here on, it's all the same as solarium
@@ -349,6 +349,7 @@ and then
 
 --
 ###Symfony 2 Integration: Enable the bundle
+Add the bundle to the AppKernel.php
 
     $bundles = array(
         ...
@@ -373,6 +374,8 @@ Configure your Solr endpoint
 
 --
 ###Symfony 2 Integration: Usage
+Solarium is accessible via the **solarium.client** alias.
+
     $client = $this->get('solarium.client');
 
     // From here on, it's all the same as solarium
@@ -381,7 +384,7 @@ Configure your Solr endpoint
     $results = $client->select($select);
 
 
-If you configured also another endpoint
+If you configured also another endpoint you will have aliases like this one
 
     $client = $this->get('solarium.client.newEndpointName');
 --
