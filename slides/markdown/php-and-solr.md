@@ -3,17 +3,15 @@ author:
   name: Lorenzo Fontana
   twitter: fontanalorenz
   email: fontanalorenzo@me.com
-  theme: jdan/cleaver-retro
-  agenda: true
-output: ../php-and-solr.html
+output: ../../index.html
 
 --
-<p align="center" style="padding-top:100px">![PHP and Solr](img/phpandsolr.png)</p>
+<p align="center" style="padding-top:100px">![PHP and Solr](slides/img/phpandsolr.png)</p>
 ## They love to work toghether!
 
 --
 ###Who am I
-<p style="float:left; margin-right: 30px">![PHP and Solr](img/renzo.jpg)</p>
+<p style="float:left; margin-right: 30px">![PHP and Solr](slides/img/renzo.jpg)</p>
 - Lorenzo Fontana
 - Developer at Facile.it
 - [github.com/fontanalorenzo](http://github.com/fontanalorenzo)
@@ -99,7 +97,7 @@ use a bundled Jetty servlet container.
 3. Your Solr instance is ready
 --
 <p align="center">
-![Me gusta](img/me-gusta.png)
+![Me gusta](slides/img/me-gusta.png)
 </p>
 --
 #Ok, thank you
@@ -387,7 +385,7 @@ If you configured also another endpoint
 
     $client = $this->get('solarium.client.newEndpointName');
 --
-![PHP and Solr](img/thats-all-folks.png)
+![PHP and Solr](slides/img/thats-all-folks.png)
 --
 # Questions?
 --
