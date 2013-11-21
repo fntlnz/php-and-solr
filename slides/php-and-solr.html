@@ -355,22 +355,22 @@ pre .chunk {
   </div>
 
 <div id="wrapper">
-    <section class="slide"><p><p align="center" style="padding-top:100px"><img src="phpandsolr.png" alt="PHP and Solr"></p></p>
+    <section class="slide"><p><p align="center" style="padding-top:100px"><img src="img/phpandsolr.png" alt="PHP and Solr"></p></p>
 <h2 id="they-love-to-work-toghether-">They love to work toghether!</h2>
 </section>
     <section class="slide"><h3 id="who-am-i">Who am I</h3>
+<p><p style="float:left; margin-right: 30px"><img src="img/renzo.jpg" alt="PHP and Solr"></p></p>
 <ul>
 <li>Lorenzo Fontana</li>
 <li>Developer at Facile.it</li>
-<li>20 years old</li>
 <li><a href="http://github.com/fontanalorenzo">github.com/fontanalorenzo</a></li>
 <li><a href="http://twitter.com/fontanalorenz">twitter.com/fontanalorenz</a></li>
 </ul>
 </section>
     <section class="slide"><h3 id="what-s-included">What&#39;s included</h3>
 <ul>
-<li>The slides, in the <em>slides</em> folder</li>
-<li>The Vagrant machine in the <em>vagrant</em> folder (we will <strong>up</strong> during this talk)</li>
+<li>The slides, in the <strong>slides</strong> folder</li>
+<li>The Vagrant machine in the <strong>vagrant</strong> folder (we will <strong>up</strong> it during this talk)</li>
 <li>The slides are generated from markdown using <a href="https://github.com/jdan/cleaver">cleaver</a></li>
 </ul>
 </section>
@@ -398,7 +398,6 @@ pre .chunk {
     <section class="slide"><h3 id="who-use-it-">Who use it?</h3>
 <ul>
 <li>Packagist</li>
-<li>Cloudera</li>
 <li>Digg</li>
 <li>AOL</li>
 <li>SourceForge</li>
@@ -414,7 +413,7 @@ pre .chunk {
 <li>Schema-less (can add new fields on-the-fly with dynamicfields</li>
 <li>Vibrant and active community</li>
 <li>Indexing of binary documents such as Word documents and PDFs</li>
-<li>Is a mature project</li>
+<li>It&#39;s a mature project</li>
 </ul>
 </section>
     <section class="slide"><h3 id="why-should-i-use-it-with-php-">Why should I use it with PHP?</h3>
@@ -451,9 +450,10 @@ use a bundled Jetty servlet container.</p>
 </ol>
 </section>
     <section class="slide"><p align="center">
-<img src="me-gusta.png" alt="Me gusta">
+<img src="img/me-gusta.png" alt="Me gusta">
 </p></section>
-    <section class="slide"><p>Ok, thank you but now, what should I do with my new Solr instance?</p>
+    <section class="slide"><h1 id="ok-thank-you">Ok, thank you</h1>
+<h2 id="but-now-what-should-i-do-with-my-new-solr-instance-">but now, what should I do with my new Solr instance?</h2>
 </section>
     <section class="slide"><h3 id="create-a-new-core">Create a new Core</h3>
 <p><pre>cd downloaded-solr/example/solr</pre>
@@ -501,12 +501,160 @@ One of the most important configuration in this file is the <strong>DIH</strong>
         <span class="tag">&lt;<span class="title">str</span> <span class="attribute">name</span>=<span class="value">"config"</span>&gt;</span>my_database.xml<span class="tag">&lt;/<span class="title">str</span>&gt;</span>
     <span class="tag">&lt;/<span class="title">lst</span>&gt;</span>
 <span class="tag">&lt;/<span class="title">requestHandler</span>&gt;</span></code></pre>
-<p>See the <a href="files/my_database.xml">my_database.xml</a> example.</p>
+</section>
+    <section class="slide"><h3 id="my_database-xml-example-files-my_database-xml-">my_database.xml <a href="files/my_database.xml">example</a></h3>
+<p><strong>my_database.xml</strong> is the config file we previously declared in the <strong>solrconfig.xml</strong>,
+this file configure how to take data and how to map them with fields of the document.
+In our case, data are coming from a mysql database, and to retrieve data we have to do some entity queries,
+each entity query refers to the query that is used when doing a full import.</p>
+</section>
+    <section class="slide"><h4 id="from-the-documentation-">From the documentation:</h4>
+<ol>
+<li>The <strong>query</strong> gives the data needed to populate fields of the Solr document in full-import</li>
+<li>The <strong>deltaImportQuery</strong> gives the data needed to populate fields when running a delta-import</li>
+<li>The <strong>deltaQuery</strong> gives the primary keys of the current entity which have changes since the last index time</li>
+</ol>
+</section>
+    <section class="slide"><h1 id="now-lets-see-some-php-">Now lets see some PHP!</h1>
+</section>
+    <section class="slide"><h3 id="solarium-intro">Solarium: Intro</h3>
+<p>Solarium is the most known PHP (5.3 +) <strong>Solr Client</strong>, a full list of its features
+can be found <a href="http://www.solarium-project.org/why-solarium/features/">here</a>.
+The features that I appreciate more than others are</p>
+<ul>
+<li>Facet support</li>
+<li>Query building</li>
+<li>MoreLikeThis</li>
+<li>Spellcheck</li>
+</ul>
+</section>
+    <section class="slide"><h3 id="solarium-installation">Solarium: Installation</h3>
+<p>In composer.json add</p>
+<pre><code>{
+  "<span class="attribute">require</span>": <span class="value">{
+      "<span class="attribute">solarium/solarium</span>": <span class="value"><span class="string">"3.1.*"</span>
+  }</span>
+}</span></code></pre>
+<p>And then run</p>
+<pre><code><span class="title">composer</span> install</code></pre>
+</section>
+    <section class="slide"><h3 id="solarium-solr-endpoint-config">Solarium: Solr endpoint config</h3>
+<pre><code>$config = <span class="keyword">array</span>(
+    <span class="attribute">'endpoint</span>' =&gt; <span class="keyword">array</span>(
+        <span class="attribute">'localhost</span>' =&gt; <span class="keyword">array</span>(
+            <span class="attribute">'host</span>' =&gt; <span class="attribute">'yourhost</span>,
+            <span class="attribute">'port</span>' =&gt; <span class="number">8983</span>,
+            <span class="attribute">'path</span>' =&gt; '/solr/',
+        )
+    )
+);</code></pre>
+</section>
+    <section class="slide"><h3 id="solarium-a-select-query-example">Solarium: A select query example</h3>
+<pre><code>/* create a client instance <span class="variable">*/</span>
+<span class="variable">$client</span> = new Solarium_Client(<span class="variable">$config</span>);
+
+<span class="regexp">/* get a select query instance */</span>
+<span class="variable">$query</span> = <span class="variable">$client</span>-&gt;createSelect();
+
+<span class="regexp">/* Set a query (all documents where name is renzo and email contains @gmail.com) */</span>
+<span class="variable">$query</span>-&gt;setQuery(<span class="string">'name:renzo AND email:@gmail.com'</span>);
+
+<span class="regexp">/* set start and rows param (comparable to SQL limit) using fluent interface */</span>
+<span class="variable">$query</span>-&gt;setStart(<span class="number">1</span>)-&gt;setRows(<span class="number">20</span>);
+
+<span class="regexp">/* set fields to fetch (this overrides the default setting 'all fields') */</span>
+<span class="variable">$query</span>-&gt;setFields(array(<span class="string">'id'</span>,<span class="string">'name'</span>,<span class="string">'surname'</span>, <span class="string">'email'</span>));
+
+<span class="regexp">/* sort the results by id DESC */</span>
+<span class="variable">$query</span>-&gt;addSort(<span class="string">'id'</span>, Solarium_Query_Select::SORT_DESC);
+
+<span class="regexp">/* this executes the query and returns the result */</span>
+<span class="variable">$resultset</span> = <span class="variable">$client</span>-&gt;select(<span class="variable">$query</span>);
+
+<span class="regexp">/* total number of results found */</span>
+<span class="variable">$numFound</span> = <span class="variable">$resultset</span>-&gt;getNumFound();</code></pre>
+</section>
+    <section class="slide"><h3 id="solarium-an-example-with-facets">Solarium: An example with facets</h3>
+<pre><code><span class="comment">// create a client instance</span>
+<span class="variable">$client</span> = <span class="keyword">new</span> Solarium\Client(<span class="variable">$config</span>);
+
+<span class="comment">// get a select query instance</span>
+<span class="variable">$query</span> = <span class="variable">$client</span>-&gt;createSelect();
+
+<span class="comment">// get the facetset component</span>
+<span class="variable">$facetSet</span> = <span class="variable">$query</span>-&gt;getFacetSet();
+
+<span class="comment">// create a facet field instance and set options</span>
+<span class="variable">$facetSet</span>-&gt;createFacetField(<span class="string">'type'</span>)-&gt;setField(<span class="string">'type'</span>);
+
+<span class="comment">// this executes the query and returns the result</span>
+<span class="variable">$resultset</span> = <span class="variable">$client</span>-&gt;select(<span class="variable">$query</span>);
+
+<span class="comment">// display facet counts</span>
+<span class="keyword">echo</span> <span class="string">'&lt;hr/&gt;Facet counts for field "type":&lt;br/&gt;'</span>;
+<span class="variable">$facet</span> = <span class="variable">$resultset</span>-&gt;getFacetSet()-&gt;getFacet(<span class="string">'stock'</span>);
+<span class="keyword">foreach</span>(<span class="variable">$facet</span> <span class="keyword">as</span> <span class="variable">$value</span> =&gt; <span class="variable">$count</span>) {
+    <span class="keyword">echo</span> <span class="string">"{$value} [{$count}]&lt;br/&gt;"</span>; <span class="comment">// ex output: type name [100]</span>
+}</code></pre>
+</section>
+    <section class="slide"><h1 id="framework-integration">Framework integration</h1>
+<h2 id="what-happens-if-i-m-on-a-zf2-or-symfony-2-application-">What happens if I&#39;m on a <strong>ZF2</strong> or <strong>Symfony 2</strong> Application?</h2>
+</section>
+    <section class="slide"><h3 id="zf2-integration">ZF2 Integration</h3>
+<p>There&#39;s a ZF2 module built around Solarium that allows
+you to connect Solr and your ZF2 application without headache.</p>
+<p>The Ewgo/SolariumModule can be found here <a href="https://github.com/Ewgo/SolariumModule"><a href="https://github.com/Ewgo/SolariumModule">https://github.com/Ewgo/SolariumModule</a></a></p>
+<p>It integrates with <strong>Zend Developer Tools</strong> and has an <strong>adapter for Zend\Paginator</strong></p>
+</section>
+    <section class="slide"><h3 id="zf2-integration-installation">ZF2 Integration: Installation</h3>
+<p>In composer.json add</p>
+<pre><code>{
+  "<span class="attribute">require</span>": <span class="value">{
+      "<span class="attribute">ewgo/solarium-module</span>": <span class="value"><span class="string">"1.0.2"</span>
+  }</span>
+}</span></code></pre>
+<p>and then run</p>
+<pre><code><span class="title">composer</span> install</code></pre>
+</section>
+    <section class="slide"><h3 id="zf2-integration-configuration">ZF2 Integration: Configuration</h3>
+<p>Configure your Solr endpoint</p>
+<pre><code><span class="keyword">array</span>(
+    <span class="attribute">'solarium</span>' =&gt; <span class="keyword">array</span>(
+        <span class="attribute">'endpoint</span>' =&gt; <span class="keyword">array</span>(
+            <span class="attribute">'default</span>' =&gt; <span class="keyword">array</span>(
+                <span class="attribute">'host</span>' =&gt; <span class="attribute">'localhost</span>',
+                <span class="attribute">'port</span>' =&gt; <span class="number">8983</span>,
+                <span class="attribute">'path</span>' =&gt; '/solr',
+                <span class="attribute">'core</span>' =&gt; <span class="attribute">'default</span>',
+                <span class="attribute">'timeout</span>' =&gt; <span class="number">5</span>
+            )
+        )
+    )
+)</code></pre>
+</section>
+    <section class="slide"><h3 id="zf2-integration-usage">ZF2 Integration: Usage</h3>
+<pre><code><span class="variable">$client</span> = <span class="variable">$serviceLocator</span>-&gt;get(<span class="string">'solarium'</span>);
+
+<span class="comment">// From here on, it's all the same as solarium</span>
+<span class="variable">$query</span> = <span class="variable">$client</span>-&gt;createSelect();
+<span class="variable">$resultset</span> = <span class="variable">$client</span>-&gt;execute(<span class="variable">$query</span>);</code></pre>
+</section>
+    <section class="slide"><h3 id="zf2-integration-paginate-results">ZF2 Integration: Paginate results</h3>
+<p>This example shows how to use the built-in Zend\Paginator adapter</p>
+<pre><code><span class="keyword">use</span> \EwgoSolarium\Paginator\Adapter\SolariumPaginator;
+
+<span class="variable">$paginator</span> = new \Zend\Paginator\Paginator(
+    new SolariumPaginator(<span class="variable">$client</span>, <span class="variable">$query</span>)
+);
+<span class="variable">$paginator</span>-&gt;setCurrentPageNumber(<span class="variable">$page</span>);
+<span class="variable">$paginator</span>-&gt;setItemCountPerPage(<span class="variable">$countPerPage</span>);</code></pre>
 </section>
     <section class="slide"><h3 id="sitography">Sitography</h3>
 <ul>
 <li><a href="http://en.wikipedia.org/wiki/Apache_Solr"><a href="http://en.wikipedia.org/wiki/Apache_Solr">http://en.wikipedia.org/wiki/Apache_Solr</a></a></li>
 <li><a href="http://lucene.apache.org/solr/"><a href="http://lucene.apache.org/solr/">http://lucene.apache.org/solr/</a></a></li>
+<li><a href="http://wiki.apache.org/solr/DataImportHandler"><a href="http://wiki.apache.org/solr/DataImportHandler">http://wiki.apache.org/solr/DataImportHandler</a></a></li>
+<li><a href="http://wiki.apache.org/solr/CommonQueryParameters"><a href="http://wiki.apache.org/solr/CommonQueryParameters">http://wiki.apache.org/solr/CommonQueryParameters</a></a></li>
 </ul>
 </section>
     <section class="slide"><div class="author">
