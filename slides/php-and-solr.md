@@ -137,7 +137,7 @@ Fortunatelly (or unfortunatelly ? ) they are **just xml files.**
 - solrconfig.xml
 
 --
-###schema.xml [example](files/schema.xml)
+###schema.xml [example](slides/files/schema.xml)
 #####Solr stores given pieces of raw data into one or more fields in its index
 The **schema.xml** file contains all of the details about which fields your documents can contain,
 and how those fields should be dealt with when adding documents to the index, or when querying those fields.
@@ -145,7 +145,7 @@ and how those fields should be dealt with when adding documents to the index, or
 **It can contain:** fields, copyfields, dynamicfields and fields types
 
 --
-###solrconfig.xml [example](files/solrconfig.xml)
+###solrconfig.xml [example](slides/files/solrconfig.xml)
 **solrconfig.xml** is the file that contains most of the parameters for configuring Solr itself.
 One of the most important configuration in this file is the **DIH** (data import handler)  configuration
 
@@ -157,7 +157,7 @@ One of the most important configuration in this file is the **DIH** (data import
     </requestHandler>
 
 --
-###my_database.xml [example](files/my_database.xml)
+###my_database.xml [example](slides/files/my_database.xml)
 **my_database.xml** is the config file we previously declared in the **solrconfig.xml**,
 this file configure how to take data and how to map them with fields of the document.
 In our case, data are coming from a mysql database, and to retrieve data we have to do some entity queries,
