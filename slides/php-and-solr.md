@@ -137,7 +137,7 @@ Fortunatelly (or unfortunatelly ? ) they are **just xml files.**
 - solrconfig.xml
 
 --
-###schema.xml [example](slides/files/schema.xml)
+###schema.xml [schema.xml)
 #####Solr stores given pieces of raw data into one or more fields in its index
 The **schema.xml** file contains all of the details about which fields your documents can contain,
 and how those fields should be dealt with when adding documents to the index, or when querying those fields.
